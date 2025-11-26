@@ -1,8 +1,21 @@
 import streamlit as st
 from backend.models.usuarios import authenticate, create_usuario, correo_existe
 import re
+import base64
+
+def get_base64_image(image_path):
+    """Convierte una imagen a base64 para embeber en HTML"""
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except FileNotFoundError:
+        st.error(f" No se encontró el logo en: {image_path}")
+        return None
 
 def login():
+    # Cargar logo en base64
+    logo_base64 = get_base64_image("img/FontTrack.png")  # Ajusta la ruta según tu estructura
+    
     # CSS personalizado con colores Bonafont
     st.markdown("""
         <style>
@@ -46,6 +59,25 @@ def login():
             border: 1px solid rgba(255, 255, 255, 0.3);
             max-width: 480px;
             margin: 0 auto;
+        }
+
+        /* Contenedor del logo */
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo-container img {
+            max-width: 180px;
+            height: auto;
+            filter: drop-shadow(0 4px 12px rgba(0, 102, 204, 0.2));
+            transition: all 0.3s ease;
+        }
+
+        .logo-container img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 6px 16px rgba(0, 102, 204, 0.3));
         }
 
         /* Logo/Título principal */
@@ -223,27 +255,33 @@ def login():
             .subtitle {
                 font-size: 1rem;
             }
+            .logo-container img {
+                max-width: 140px;
+            }
         }
 
         /* Ocultar elementos de Streamlit */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-        header {visibility: hidden;}
+        
         </style>
     """, unsafe_allow_html=True)
 
     
     # Inicializar estados
-    
     if "mostrar_registro" not in st.session_state:
         st.session_state["mostrar_registro"] = False
 
     # Contenedor principal
-    
     st.markdown('<div class="main-container">', unsafe_allow_html=True)
     
+    
     # Título y subtítulo
-    st.markdown('<h1 class="main-title"><span class="icon-float">💧</span> Frontrack</h1>', unsafe_allow_html=True)
+    # Logo embebido en base64
+    if logo_base64:
+        st.markdown(f"""
+            <div class="logo-container">
+                <img src="data:image/png;base64,{logo_base64}" alt="Frontrack Logo">
+            </div>
+        """, unsafe_allow_html=True)
     st.markdown('<p class="subtitle">Gestiona incidencias y materiales de forma inteligente</p>', unsafe_allow_html=True)
 
     # VISTA LOGIN
@@ -251,18 +289,17 @@ def login():
         col1, col2, col3 = st.columns([0.5, 2, 0.5])
         
         with col2:
-            st.markdown('<div class="login-card">', unsafe_allow_html=True)
-            st.markdown('<h2 class="section-title">🔐 Iniciar Sesión</h2>', unsafe_allow_html=True)
+            st.markdown('<h2 class="section-title"> Iniciar Sesión</h2>', unsafe_allow_html=True)
 
             correo = st.text_input(
-                "📧 Correo Electrónico",
-                placeholder="tu@correo.com",
+                " Correo Electrónico",
+                placeholder="email@bonafont.com",
                 help="Ingresa tu correo registrado",
                 key="login_correo"
             )
 
             password = st.text_input(
-                "🔑 Contraseña",
+                " Contraseña",
                 type="password",
                 placeholder="••••••••",
                 help="Ingresa tu contraseña",
@@ -271,11 +308,11 @@ def login():
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            if st.button("🚀 INGRESAR", use_container_width=True):
+            if st.button(" INGRESAR", use_container_width=True):
                 if not correo or not password:
-                    st.error("⚠️ Por favor completa todos los campos")
+                    st.error(" Por favor completa todos los campos")
                 else:
-                    with st.spinner("🔄 Verificando credenciales..."):
+                    with st.spinner(" Verificando credenciales..."):
                         user = authenticate(correo, password)
                         
                         if user:
@@ -285,16 +322,16 @@ def login():
                                 "rol": user["rol"],
                                 "correo": user["correo"]
                             }
-                            st.success(f"✅ ¡Bienvenido {user['nombre']}! 👋")
+                            st.success(f" ¡Bienvenido {user['nombre']}! ")
                             st.balloons()
                             st.session_state["page"] = "dashboard"
                             st.rerun()
                         else:
-                            st.error("🚫 Credenciales incorrectas")
+                            st.error(" Credenciales incorrectas")
 
             st.markdown('<div class="elegant-divider"><span>O</span></div>', unsafe_allow_html=True)
 
-            if st.button("✨ CREAR CUENTA NUEVA", use_container_width=True, type="secondary"):
+            if st.button(" CREAR CUENTA NUEVA", use_container_width=True, type="secondary"):
                 st.session_state["mostrar_registro"] = True
                 st.rerun()
 
@@ -306,17 +343,17 @@ def login():
         
         with col2:
             st.markdown('<div class="login-card">', unsafe_allow_html=True)
-            st.markdown('<h2 class="section-title">📝 Crear Cuenta</h2>', unsafe_allow_html=True)
+            st.markdown('<h2 class="section-title"> Crear Cuenta</h2>', unsafe_allow_html=True)
 
             nombre = st.text_input(
-                "👤 Nombre Completo",
+                " Nombre Completo",
                 placeholder="Juan Pérez González",
                 help="Nombre y apellido(s)",
                 key="reg_nombre"
             )
 
             correo = st.text_input(
-                "📧 Correo Electrónico",
+                " Correo Electrónico",
                 placeholder="tu@correo.com",
                 help="Correo válido con formato usuario@dominio.com",
                 key="reg_correo"
@@ -326,7 +363,7 @@ def login():
             
             with col_pass1:
                 password = st.text_input(
-                    "🔑 Contraseña",
+                    " Contraseña",
                     type="password",
                     placeholder="••••••••",
                     help="Mínimo 8 caracteres",
@@ -335,7 +372,7 @@ def login():
             
             with col_pass2:
                 confirmar = st.text_input(
-                    "🔒 Confirmar",
+                    " Confirmar",
                     type="password",
                     placeholder="••••••••",
                     help="Repite la contraseña",
@@ -370,57 +407,57 @@ def login():
 
             st.markdown("<br>", unsafe_allow_html=True)
 
-            if st.button("✅ REGISTRAR CUENTA", use_container_width=True):
+            if st.button(" REGISTRAR CUENTA", use_container_width=True):
                 # Validaciones
                 if not nombre or not correo or not password or not confirmar:
-                    st.error("⚠️ Todos los campos son obligatorios")
+                    st.error(" Todos los campos son obligatorios")
                     st.stop()
 
                 # Validar nombre (mínimo 2 palabras, solo letras)
                 tokens = [t for t in nombre.strip().split() if t]
                 if len(tokens) < 2:
-                    st.warning("⚠️ Ingresa nombre completo (nombre y apellido)")
+                    st.warning(" Ingresa nombre completo (nombre y apellido)")
                     st.stop()
                 
                 if not all(token.replace(" ", "").isalpha() for token in tokens):
-                    st.warning("⚠️ El nombre solo debe contener letras")
+                    st.warning(" El nombre solo debe contener letras")
                     st.stop()
 
                 # Validar correo con regex robusto
                 email_pattern = r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'
                 if not re.match(email_pattern, correo):
-                    st.warning("⚠️ Formato de correo inválido")
+                    st.warning(" Formato de correo inválido")
                     st.stop()
 
                 # Verificar si el correo ya existe
                 if correo_existe(correo):
-                    st.error("🚫 Este correo ya está registrado")
+                    st.error(" Este correo ya está registrado")
                     st.stop()
 
                 # Validar contraseña (mínimo 8 caracteres)
                 if len(password) < 8:
-                    st.warning("⚠️ La contraseña debe tener mínimo 8 caracteres")
+                    st.warning(" La contraseña debe tener mínimo 8 caracteres")
                     st.stop()
 
                 if not any(c.islower() for c in password):
-                    st.warning("⚠️ Incluye al menos una minúscula")
+                    st.warning(" Incluye al menos una minúscula")
                     st.stop()
 
                 if not any(c.isupper() for c in password):
-                    st.warning("⚠️ Incluye al menos una mayúscula")
+                    st.warning(" Incluye al menos una mayúscula")
                     st.stop()
 
                 if not any(c.isdigit() for c in password):
-                    st.warning("⚠️ Incluye al menos un número")
+                    st.warning(" Incluye al menos un número")
                     st.stop()
 
                 # Verificar que las contraseñas coincidan
                 if password != confirmar:
-                    st.error("⚠️ Las contraseñas no coinciden")
+                    st.error(" Las contraseñas no coinciden")
                     st.stop()
 
                 # Crear usuario
-                with st.spinner("🔄 Creando tu cuenta..."):
+                with st.spinner(" Creando tu cuenta..."):
                     try:
                         create_usuario(
                             nombre=nombre.strip(),
@@ -428,13 +465,13 @@ def login():
                             rol="empleado",
                             password=password
                         )
-                        st.success("🎉 ¡Cuenta creada exitosamente!")
+                        st.success(" ¡Cuenta creada exitosamente!")
                         st.balloons()
-                        st.info("👉 Ya puedes iniciar sesión")
+                        st.info(" Ya puedes iniciar sesión")
                         st.session_state["mostrar_registro"] = False
                         st.rerun()
                     except Exception as e:
-                        st.error(f"❌ Error al crear la cuenta: {e}")
+                        st.error(f" Error al crear la cuenta: {e}")
                         st.stop()
 
             st.markdown('<div class="elegant-divider"><span></span></div>', unsafe_allow_html=True)
@@ -450,6 +487,6 @@ def login():
     # Footer
     st.markdown("""
         <div class="footer-text">
-            <p>🔒 Tus datos están protegidos con encriptación de nivel empresarial</p>
+            <p> Tus datos están protegidos con encriptación de nivel empresarial</p>
         </div>
     """, unsafe_allow_html=True)
