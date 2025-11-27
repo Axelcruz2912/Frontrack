@@ -1,14 +1,39 @@
+import sys
 from bson import ObjectId
 from datetime import datetime
-from backend.db import get_db
+from pathlib import Path
 
+# Configuración del path y conexión a la base de datos
+# Esta línea ayuda a resolver la estructura de módulos si se ejecuta desde el script
+sys.path.insert(0, str(Path(__file__).resolve().parents[2])) 
+
+# Importaciones específicas después de ajustar el path
+# Asumiendo que 'backend.db' contiene la lógica para 'get_db()'
+try:
+    from backend.db import get_db
+except ImportError as e:
+    print(f"Error de importación de get_db: {e}")
+    sys.exit(1)
+
+# Conexión a la base de datos y selección de la colección
 db = get_db()
 materiales = db["materiales"]
 
 def seed_materiales():
+    """Inserta datos de materiales de prueba en la colección 'materiales'."""
+    
+    # 1. Crear el índice único para 'clave_material' si no existe
+    # Esto previene la inserción de materiales duplicados basados en su clave.
+    try:
+        materiales.create_index("clave_material", unique=True)
+        print("Índice único en 'clave_material' creado/verificado.")
+    except Exception as e:
+        # Esto podría fallar si ya existen duplicados en la colección (no solo en el seed)
+        print(f"Advertencia: No se pudo crear el índice único: {e}")
+        
     data = [
         {
-            "_id": ObjectId(),
+        "_id": ObjectId(),
             "clave_material": "TV13AER",
             "descripcion": "AEROSOL ROJO",
             "generico": "AEROSOL",
@@ -565,8 +590,12 @@ def seed_materiales():
         }
     ]
 
-    materiales.insert_many(data)
-    print(f"Seed de materiales insertado correctamente. Total: {len(data)} registros.")
+    # Re-insertar los datos (aquí debes pegar el resto de la lista 'data' original)
+    try:
+        result = materiales.insert_many(data)
+        print(f"✅ Seed de materiales insertado correctamente. Total: {len(result.inserted_ids)} registros.")
+    except Exception as e:
+        print(f"❌ Error al insertar datos. Es posible que ya existan documentos con la misma 'clave_material'. Error: {e}")
 
 if __name__ == "__main__":
     seed_materiales()
