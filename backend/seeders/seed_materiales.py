@@ -1,41 +1,572 @@
-import sys 
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from bson import ObjectId
+from datetime import datetime
+from backend.db import get_db
 
-from backend.models.materiales import create_material
+db = get_db()
+materiales = db["materiales"]
 
-SAMPLE_MATERIALES = [
-    {
-        "nombre": "Filtro de agua 10\"",
-        "codigo": "MAT-001",
-        "unidad": "unidad",
-        "existencia": 50,
-        "descripcion": "Filtro de repuesto para plantas de tratamiento"
-    },
-    {
-        "nombre": "Tubo PVC 3/4\"",
-        "codigo": "MAT-002",
-        "unidad": "metro",
-        "existencia": 200,
-        "descripcion": "Tubo PVC para conducción de agua"
-    },
-    {
-        "nombre": "Válvula de bola 1\"",
-        "codigo": "MAT-003",
-        "unidad": "unidad",
-        "existencia": 75,
-        "descripcion": "Válvula de control de paso"
-    }
-]
+def seed_materiales():
+    data = [
+        {
+            "_id": ObjectId(),
+            "clave_material": "TV13AER",
+            "descripcion": "AEROSOL ROJO",
+            "generico": "AEROSOL",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 2,
+            "costo_promedio": 121.15,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "V13AERT",
+            "descripcion": "AEROSOL VERDE",
+            "generico": "AEROSOL",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 2,
+            "costo_promedio": 121.15,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
 
-def run():
-    for m in SAMPLE_MATERIALES:
-        try:
-            # pasar copia para evitar mutar la constante en create_material
-            created = create_material(m.copy())
-            print(f"Material creado: {created.get('nombre')} ({created.get('_id')})")
-        except Exception as e:
-            print(f"Error creando material '{m.get('nombre')}': {e}")
+        # ---------------------------------------------------------
+        # 🔧 MATERIALES DE MOTOR
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "LUB10W40",
+            "descripcion": "ACEITE 10W-40 SINTÉTICO",
+            "generico": "ACEITE",
+            "clasificacion": "MOTOR",
+            "existencia": 25,
+            "costo_promedio": 89.90,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LUB5W30",
+            "descripcion": "ACEITE 5W-30 SINTÉTICO",
+            "generico": "ACEITE",
+            "clasificacion": "MOTOR",
+            "existencia": 18,
+            "costo_promedio": 95.50,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LUB20W50",
+            "descripcion": "ACEITE 20W-50 MINERAL",
+            "generico": "ACEITE",
+            "clasificacion": "MOTOR",
+            "existencia": 30,
+            "costo_promedio": 65.75,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "FILTACE001",
+            "descripcion": "FILTRO DE ACEITE UNIVERSAL",
+            "generico": "FILTRO",
+            "clasificacion": "MOTOR",
+            "existencia": 15,
+            "costo_promedio": 55.45,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "FILTAIRE001",
+            "descripcion": "FILTRO DE AIRE UNIVERSAL",
+            "generico": "FILTRO",
+            "clasificacion": "MOTOR",
+            "existencia": 22,
+            "costo_promedio": 48.30,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "FILTGAS001",
+            "descripcion": "FILTRO DE GASOLINA UNIVERSAL",
+            "generico": "FILTRO",
+            "clasificacion": "MOTOR",
+            "existencia": 12,
+            "costo_promedio": 72.15,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+
+        # ---------------------------------------------------------
+        # 🛑 SISTEMA DE FRENOS
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "PASTFREDEL",
+            "descripcion": "PASTILLAS DE FRENO DELANTERAS",
+            "generico": "PASTILLAS",
+            "clasificacion": "FRENOS",
+            "existencia": 8,
+            "costo_promedio": 320.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "PASTFRETRA",
+            "descripcion": "PASTILLAS DE FRENO TRASERAS",
+            "generico": "PASTILLAS",
+            "clasificacion": "FRENOS",
+            "existencia": 6,
+            "costo_promedio": 280.50,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "DISCOSDEL",
+            "descripcion": "DISCOS DE FRENO DELANTEROS",
+            "generico": "DISCOS",
+            "clasificacion": "FRENOS",
+            "existencia": 4,
+            "costo_promedio": 450.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LIQFRE001",
+            "descripcion": "LÍQUIDO DE FRENOS DOT-4",
+            "generico": "LÍQUIDO DE FRENOS",
+            "clasificacion": "FRENOS",
+            "existencia": 12,
+            "costo_promedio": 43.25,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LIQFRE002",
+            "descripcion": "LÍQUIDO DE FRENOS DOT-3",
+            "generico": "LÍQUIDO DE FRENOS",
+            "clasificacion": "FRENOS",
+            "existencia": 10,
+            "costo_promedio": 38.75,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+
+        # ---------------------------------------------------------
+        # 🔋 SISTEMA ELÉCTRICO
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "BATERIA12V",
+            "descripcion": "BATERÍA 12V 600A",
+            "generico": "BATERÍA",
+            "clasificacion": "ELÉCTRICO",
+            "existencia": 4,
+            "costo_promedio": 1150.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "BATERIA12V2",
+            "descripcion": "BATERÍA 12V 700A",
+            "generico": "BATERÍA",
+            "clasificacion": "ELÉCTRICO",
+            "existencia": 3,
+            "costo_promedio": 1350.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "ALTERNADOR",
+            "descripcion": "ALTERNADOR UNIVERSAL",
+            "generico": "ALTERNADOR",
+            "clasificacion": "ELÉCTRICO",
+            "existencia": 2,
+            "costo_promedio": 1200.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "MOTARRAQUE",
+            "descripcion": "MOTOR DE ARRANQUE",
+            "generico": "MOTOR ARRANQUE",
+            "clasificacion": "ELÉCTRICO",
+            "existencia": 2,
+            "costo_promedio": 950.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "BUJIACOBRE",
+            "descripcion": "BUJÍA DE COBRE STANDARD",
+            "generico": "BUJÍA",
+            "clasificacion": "ENCENDIDO",
+            "existencia": 50,
+            "costo_promedio": 85.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "BUJIAIRID",
+            "descripcion": "BUJÍA IRIDIUM NGK",
+            "generico": "BUJÍA",
+            "clasificacion": "ENCENDIDO",
+            "existencia": 30,
+            "costo_promedio": 150.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "BUJIAPLAT",
+            "descripcion": "BUJÍA PLATINO BOSCH",
+            "generico": "BUJÍA",
+            "clasificacion": "ENCENDIDO",
+            "existencia": 25,
+            "costo_promedio": 120.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+
+        # ---------------------------------------------------------
+        # ❄️ SISTEMA DE ENFRIAMIENTO
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "ANTICONG01",
+            "descripcion": "ANTICONGELANTE VERDE 1L",
+            "generico": "ANTICONGELANTE",
+            "clasificacion": "ENFRIAMIENTO",
+            "existencia": 20,
+            "costo_promedio": 67.80,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "ANTICONG02",
+            "descripcion": "ANTICONGELANTE NARANJA 1L",
+            "generico": "ANTICONGELANTE",
+            "clasificacion": "ENFRIAMIENTO",
+            "existencia": 15,
+            "costo_promedio": 72.50,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "RADIADORUNI",
+            "descripcion": "RADIADOR UNIVERSAL",
+            "generico": "RADIADOR",
+            "clasificacion": "ENFRIAMIENTO",
+            "existencia": 3,
+            "costo_promedio": 850.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "MANGUERAAG",
+            "descripcion": "MANGUERA DE AGUA",
+            "generico": "MANGUERA",
+            "clasificacion": "ENFRIAMIENTO",
+            "existencia": 8,
+            "costo_promedio": 45.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "TERMOSTATO",
+            "descripcion": "TERMOSTATO UNIVERSAL",
+            "generico": "TERMOSTATO",
+            "clasificacion": "ENFRIAMIENTO",
+            "existencia": 10,
+            "costo_promedio": 120.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+
+        # ---------------------------------------------------------
+        # 🛞 SUSPENSIÓN Y DIRECCIÓN
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "AMORTDEL",
+            "descripcion": "AMORTIGUADOR DELANTERO",
+            "generico": "AMORTIGUADOR",
+            "clasificacion": "SUSPENSION",
+            "existencia": 6,
+            "costo_promedio": 380.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "AMORTTRA",
+            "descripcion": "AMORTIGUADOR TRASERO",
+            "generico": "AMORTIGUADOR",
+            "clasificacion": "SUSPENSION",
+            "existencia": 6,
+            "costo_promedio": 320.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "ROTULAEXT",
+            "descripcion": "ROTULA EXTERIOR",
+            "generico": "ROTULA",
+            "clasificacion": "DIRECCION",
+            "existencia": 12,
+            "costo_promedio": 95.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "ROTULAINT",
+            "descripcion": "ROTULA INTERIOR",
+            "generico": "ROTULA",
+            "clasificacion": "DIRECCION",
+            "existencia": 12,
+            "costo_promedio": 110.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "TERMINALDIR",
+            "descripcion": "TERMINAL DE DIRECCIÓN",
+            "generico": "TERMINAL",
+            "clasificacion": "DIRECCION",
+            "existencia": 15,
+            "costo_promedio": 75.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+
+        # ---------------------------------------------------------
+        # 🎨 CARROCERÍA Y PINTURA
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "AEROSOLAZUL",
+            "descripcion": "AEROSOL AZUL METÁLICO",
+            "generico": "AEROSOL",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 5,
+            "costo_promedio": 121.15,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "AEROSOLNEG",
+            "descripcion": "AEROSOL NEGRO MATE",
+            "generico": "AEROSOL",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 4,
+            "costo_promedio": 121.15,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "AEROSOLBLA",
+            "descripcion": "AEROSOL BLANCO PERLA",
+            "generico": "AEROSOL",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 3,
+            "costo_promedio": 135.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "MASILLAEPO",
+            "descripcion": "MASILLA EPOXICA 1KG",
+            "generico": "MASILLA",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 8,
+            "costo_promedio": 89.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LIJAGRA120",
+            "descripcion": "LIJA GRANO 120",
+            "generico": "LIJA",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 25,
+            "costo_promedio": 12.50,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LIJAGRA400",
+            "descripcion": "LIJA GRANO 400",
+            "generico": "LIJA",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 20,
+            "costo_promedio": 15.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LIJAGRA800",
+            "descripcion": "LIJA GRANO 800",
+            "generico": "LIJA",
+            "clasificacion": "CARROCERIA Y PINTURA",
+            "existencia": 18,
+            "costo_promedio": 18.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+
+        # ---------------------------------------------------------
+        # 🔧 HERRAMIENTAS Y CONSUMIBLES
+        # ---------------------------------------------------------
+        {
+            "_id": ObjectId(),
+            "clave_material": "GRASALITIO",
+            "descripcion": "GRASA DE LITIO 400G",
+            "generico": "GRASA",
+            "clasificacion": "LUBRICANTES",
+            "existencia": 15,
+            "costo_promedio": 45.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "SILICONA300",
+            "descripcion": "SILICONA NEUTRA 300ML",
+            "generico": "SILICONA",
+            "clasificacion": "SELLADORES",
+            "existencia": 10,
+            "costo_promedio": 38.50,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "CINTAELEC",
+            "descripcion": "CINTA AISLANTE NEGRA",
+            "generico": "CINTA",
+            "clasificacion": "ELECTRICO",
+            "existencia": 30,
+            "costo_promedio": 25.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "FUSIBLE20A",
+            "descripcion": "FUSIBLE 20 AMPERES",
+            "generico": "FUSIBLE",
+            "clasificacion": "ELECTRICO",
+            "existencia": 50,
+            "costo_promedio": 8.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "FUSIBLE30A",
+            "descripcion": "FUSIBLE 30 AMPERES",
+            "generico": "FUSIBLE",
+            "clasificacion": "ELECTRICO",
+            "existencia": 40,
+            "costo_promedio": 10.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "LIMPIACONT",
+            "descripcion": "LIMPIADOR DE CONTACTOS 200ML",
+            "generico": "LIMPIADOR",
+            "clasificacion": "LIMPIEZA",
+            "existencia": 12,
+            "costo_promedio": 65.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        },
+        {
+            "_id": ObjectId(),
+            "clave_material": "DESENGRAS",
+            "descripcion": "DESENGRASANTE 1L",
+            "generico": "DESENGRASANTE",
+            "clasificacion": "LIMPIEZA",
+            "existencia": 8,
+            "costo_promedio": 55.00,
+            "lugar_id": "2",
+            "created_at": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }
+    ]
+
+    materiales.insert_many(data)
+    print(f"Seed de materiales insertado correctamente. Total: {len(data)} registros.")
 
 if __name__ == "__main__":
-    run()
+    seed_materiales()
