@@ -5,6 +5,8 @@ from frontend.dashboard_empleado import empleado_dashboard
 from frontend.perfil_usuariooo import perfil_usuario
 from frontend.crud_menu import crud_menu
 from frontend.analytics_menu import analytics_menu
+from frontend.reset_password import reset_password_view
+
 
 # 🎨 ESTILOS CSS MEJORADOS
 st.markdown("""
@@ -154,18 +156,27 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+query_params = st.query_params
 
-# Estado inicial
+# 1️⃣ Si viene un token en la URL → forzar pantalla de reset password
+if "token" in query_params:
+    from frontend.reset_password import reset_password_view
+    reset_password_view()
+    st.stop()
+
+# 2️⃣ Estado inicial (solo si no hay token)
 if "page" not in st.session_state:
     st.session_state["page"] = "login"
 
-# Si no está logueado → mostrar login
+# 3️⃣ Si no está logueado → mostrar login
+# (Esto se ejecuta solo si no hay token)
 if st.session_state["page"] == "login":
     login()
     st.stop()
 
-# Si sí está logueado → mostrar sidebar con menú
+# 4️⃣ Si sí está logueado → validar usuario y mostrar menú
 user = st.session_state.get("user", None)
+
 if not user:
     st.session_state["page"] = "login"
     st.rerun()
